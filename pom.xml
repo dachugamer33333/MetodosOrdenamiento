@@ -61,7 +61,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                fes.aragon.unam.metodosordenamiento/fes.aragon.unam.metodosordenamiento.HelloApplication
+                                fes.aragon.unam.metodosordenamiento.Launcher
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
