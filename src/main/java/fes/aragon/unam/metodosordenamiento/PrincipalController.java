@@ -10,6 +10,7 @@ import mx.unam.fes.dinamico.ListaDoble.ListaDoblementeEnlazada;
 import mx.unam.fes.dinamico.ListaDoble.Nodo;
 
 import java.net.URL;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 public class PrincipalController implements Initializable {
@@ -18,7 +19,7 @@ public class PrincipalController implements Initializable {
     int tiempoRetardo =40;
     int numeroDatos = 40;
     @FXML
-    private BarChart<?, ?> bacGrafica;
+    private BarChart<String, Number> bacGrafica;
 
     @FXML
     private Button btnBurbuja;
@@ -28,7 +29,10 @@ public class PrincipalController implements Initializable {
 
     @FXML
     void MetodoNuevaLista(ActionEvent event) {
-
+        bacGrafica.getData().clear();
+        XYChart.Series<String, Number> series = new XYChart.Series<String, Number>();
+        series = generarAleatoriosEnteros(numeroDatos);
+        bacGrafica.getData().add(series);
     }
 
     @FXML
@@ -37,8 +41,20 @@ public class PrincipalController implements Initializable {
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(URL arg0, ResourceBundle arg1) {
+        bacGrafica.setAnimated(false);
+        XYChart.Series<String, Number> series = new XYChart.Series<String, Number>();
+        series = generarAleatoriosEnteros(numeroDatos);
+        bacGrafica.getData().add(series);
+    }
+    private XYChart.Series<String, Number> generarAleatoriosEnteros(int n) {
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        Random rnd = new Random();
+        for (int i = 1; i <= n; i++) {
+            series.getData().add(new XYChart.Data<>(String.valueOf(i), rnd.nextInt(100)));
+        }
 
+        return series;
     }
     public static ListaDoblementeEnlazada<Integer> bubbleSort(ListaDoblementeEnlazada<Integer> lista) {
         if (lista == null || lista.esVacia()) {
