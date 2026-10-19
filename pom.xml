@@ -27,6 +27,14 @@
         </dependency>
 
         <dependency>
+            <groupId>mx.unam.fes</groupId>
+            <artifactId>Herramientas</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/jar/Herramientas.jar</systemPath>
+        </dependency>
+
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>${junit.version}</version>
