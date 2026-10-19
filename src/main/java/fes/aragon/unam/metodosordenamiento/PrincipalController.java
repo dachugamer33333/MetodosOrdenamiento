@@ -10,6 +10,8 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import mx.unam.fes.dinamico.ListaDoble.ListaDoblementeEnlazada;
 import mx.unam.fes.dinamico.ListaDoble.Nodo;
+import mx.unam.fes.estatico.Arreglo;
+import mx.unam.fes.exepciones.IndicieFueraExeption;
 
 import java.net.URL;
 import java.util.Random;
@@ -56,7 +58,7 @@ public class PrincipalController implements Initializable {
             @Override
             protected Void call() {
                 bubbleSort(lista, actual -> {
-                    int[] valores = valoresDe(actual);
+                    Arreglo<Integer> valores = valoresDe(actual);
                     Platform.runLater(() -> aplicarValores(valores));
                     try {
                         Thread.sleep(tiempoRetardo);
@@ -111,18 +113,25 @@ public class PrincipalController implements Initializable {
         aplicarValores(valoresDe(lista));
     }
 
-    private void aplicarValores(int[] valores) {
-        for (int i = 0; i < valores.length && i < serie.getData().size(); i++) {
-            serie.getData().get(i).setYValue(valores[i]);
+    private void aplicarValores(Arreglo<Integer> valores) {
+        try {
+            for (int i = 0; i < valores.numElementos() && i < serie.getData().size(); i++) {
+                serie.getData().get(i).setYValue(valores.recuperar(i));
+            }
+        } catch (IndicieFueraExeption e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private static int[] valoresDe(ListaDoblementeEnlazada<Integer> lista) {
-        int[] valores = new int[lista.getLongitud()];
+    private static Arreglo<Integer> valoresDe(ListaDoblementeEnlazada<Integer> lista) {
+        Arreglo<Integer> valores = new Arreglo<>(lista.getLongitud());
         Nodo<Integer> actual = lista.getCabeza();
-        int i = 0;
         while (actual != null) {
-            valores[i++] = actual.getDato();
+            try {
+                valores.insertar(actual.getDato());
+            } catch (IndicieFueraExeption e) {
+                throw new RuntimeException(e);
+            }
             actual = actual.getSiguiente();
         }
         return valores;
