@@ -49,8 +49,9 @@ public class PrincipalController implements Initializable {
 
     @FXML
     void MetodoNuevaLista(ActionEvent event) {
-        if (!ordenando) {
+        if (ordenando) {
             nuevaLista(numeroDatos);
+            ordenando = false;
         }
     }
 
@@ -107,6 +108,7 @@ public class PrincipalController implements Initializable {
         Thread hilo = new Thread(tarea);
         hilo.setDaemon(true);
         hilo.start();
+
     }
 
     private void notificarCambio(ListaDoblementeEnlazada<Integer> actual) {
@@ -120,16 +122,20 @@ public class PrincipalController implements Initializable {
     }
 
     private void setBotonesDeshabilitados(boolean deshabilitar) {
-        if (btnBurbuja != null) btnBurbuja.setDisable(deshabilitar);
-        if (btnInsercion != null) btnInsercion.setDisable(deshabilitar);
-        if (btnMezcla != null) btnMezcla.setDisable(deshabilitar);
-        if (btnShaker != null) btnShaker.setDisable(deshabilitar);
-        if (btnQuickSort != null) btnQuickSort.setDisable(deshabilitar);
-        if (btnNuevaLista != null) btnNuevaLista.setDisable(deshabilitar);
+
+            if (btnBurbuja != null) btnBurbuja.setDisable(deshabilitar);
+            if (btnInsercion != null) btnInsercion.setDisable(deshabilitar);
+            if (btnMezcla != null) btnMezcla.setDisable(deshabilitar);
+            if (btnShaker != null) btnShaker.setDisable(deshabilitar);
+            if (btnQuickSort != null) btnQuickSort.setDisable(deshabilitar);
+            if (btnNuevaLista != null) btnNuevaLista.setDisable(deshabilitar);
+
+
+
     }
 
     private void finalizarOrdenamiento() {
-        ordenando = false;
+
         setBotonesDeshabilitados(false);
     }
 
