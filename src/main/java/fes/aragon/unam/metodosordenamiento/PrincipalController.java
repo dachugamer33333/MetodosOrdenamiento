@@ -14,16 +14,20 @@ import mx.unam.fes.estatico.Arreglo;
 import mx.unam.fes.exepciones.IndicieFueraExeption;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
 
 public class PrincipalController implements Initializable {
+    private static final String COLOR_ORDENADO = "-fx-bar-fill: #1e88e5;";
+
     private int tiempoRetardo = 40;
     private int numeroDatos = 40;
 
     private XYChart.Series<String, Number> serie;
     private ListaDoblementeEnlazada<Integer> lista;
+    private int[] valoresObjetivo;
     private boolean ordenando = false;
 
     @FXML
@@ -49,9 +53,8 @@ public class PrincipalController implements Initializable {
 
     @FXML
     void MetodoNuevaLista(ActionEvent event) {
-        if (ordenando) {
+        if (!ordenando) {
             nuevaLista(numeroDatos);
-            ordenando = false;
         }
     }
 
@@ -135,7 +138,7 @@ public class PrincipalController implements Initializable {
     }
 
     private void finalizarOrdenamiento() {
-
+        ordenando = false;
         setBotonesDeshabilitados(false);
     }
 
@@ -151,12 +154,17 @@ public class PrincipalController implements Initializable {
         lista = new ListaDoblementeEnlazada<>();
         serie = new XYChart.Series<>();
         Random rnd = new Random();
-        for (int i = 1; i <= n; i++) {
+        int[] generados = new int[n];
+        for (int i = 0; i < n; i++) {
             int valor = rnd.nextInt(100);
+            generados[i] = valor;
             lista.agregarCola(valor);
-            serie.getData().add(new XYChart.Data<>(String.valueOf(i), valor));
+            serie.getData().add(new XYChart.Data<>(String.valueOf(i + 1), valor));
         }
+        valoresObjetivo = generados.clone();
+        Arrays.sort(valoresObjetivo);
         bacGrafica.getData().add(serie);
+        Platform.runLater(this::aplicarColores);
     }
 
     private void actualizarGrafica() {
@@ -170,6 +178,21 @@ public class PrincipalController implements Initializable {
             }
         } catch (IndicieFueraExeption e) {
             throw new RuntimeException(e);
+        }
+        aplicarColores();
+    }
+
+    private void aplicarColores() {
+        if (serie == null || valoresObjetivo == null) {
+            return;
+        }
+        for (int i = 0; i < serie.getData().size() && i < valoresObjetivo.length; i++) {
+            XYChart.Data<String, Number> dato = serie.getData().get(i);
+            if (dato.getNode() == null || dato.getYValue() == null) {
+                continue;
+            }
+            boolean enSuLugar = dato.getYValue().intValue() == valoresObjetivo[i];
+            dato.getNode().setStyle(enSuLugar ? COLOR_ORDENADO : null);
         }
     }
 
