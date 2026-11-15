@@ -14,7 +14,6 @@ import mx.unam.fes.estatico.Arreglo;
 import mx.unam.fes.exepciones.IndicieFueraExeption;
 
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
@@ -27,7 +26,7 @@ public class PrincipalController implements Initializable {
 
     private XYChart.Series<String, Number> serie;
     private ListaDoblementeEnlazada<Integer> lista;
-    private int[] valoresObjetivo;
+    private Arreglo<Integer> valoresObjetivo;
     private boolean ordenando = false;
 
     @FXML
@@ -156,15 +155,12 @@ public class PrincipalController implements Initializable {
         lista = new ListaDoblementeEnlazada<>();
         serie = new XYChart.Series<>();
         Random rnd = new Random();
-        int[] generados = new int[n];
         for (int i = 0; i < n; i++) {
             int valor = rnd.nextInt(100);
-            generados[i] = valor;
             lista.agregarCola(valor);
             serie.getData().add(new XYChart.Data<>(String.valueOf(i + 1), valor));
         }
-        valoresObjetivo = generados.clone();
-        Arrays.sort(valoresObjetivo);
+        valoresObjetivo = copiaOrdenada(lista);
         bacGrafica.getData().add(serie);
         Platform.runLater(this::aplicarColores);
     }
@@ -174,12 +170,8 @@ public class PrincipalController implements Initializable {
     }
 
     private void aplicarValores(Arreglo<Integer> valores) {
-        try {
-            for (int i = 0; i < valores.numElementos() && i < serie.getData().size(); i++) {
-                serie.getData().get(i).setYValue(valores.recuperar(i));
-            }
-        } catch (IndicieFueraExeption e) {
-            throw new RuntimeException(e);
+        for (int i = 0; i < valores.numElementos() && i < serie.getData().size(); i++) {
+            serie.getData().get(i).setYValue(valorEn(valores, i));
         }
         aplicarColores();
     }
@@ -188,13 +180,40 @@ public class PrincipalController implements Initializable {
         if (serie == null || valoresObjetivo == null) {
             return;
         }
-        for (int i = 0; i < serie.getData().size() && i < valoresObjetivo.length; i++) {
+        for (int i = 0; i < serie.getData().size() && i < valoresObjetivo.numElementos(); i++) {
             XYChart.Data<String, Number> dato = serie.getData().get(i);
             if (dato.getNode() == null || dato.getYValue() == null) {
                 continue;
             }
-            boolean enSuLugar = dato.getYValue().intValue() == valoresObjetivo[i];
+            boolean enSuLugar = dato.getYValue().intValue() == valorEn(valoresObjetivo, i);
             dato.getNode().setStyle(enSuLugar ? COLOR_ORDENADO : null);
+        }
+    }
+
+    private static Arreglo<Integer> copiaOrdenada(ListaDoblementeEnlazada<Integer> origen) {
+        ListaDoblementeEnlazada<Integer> copia = new ListaDoblementeEnlazada<>();
+        Nodo<Integer> actual = origen.getCabeza();
+        while (actual != null) {
+            copia.agregarCola(actual.getDato());
+            actual = actual.getSiguiente();
+        }
+        bubbleSort(copia);
+        return valoresDe(copia);
+    }
+
+    private static void insertarEn(Arreglo<Integer> arreglo, Integer valor) {
+        try {
+            arreglo.insertar(valor);
+        } catch (IndicieFueraExeption e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static int valorEn(Arreglo<Integer> arreglo, int indice) {
+        try {
+            return arreglo.recuperar(indice);
+        } catch (IndicieFueraExeption e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -202,11 +221,7 @@ public class PrincipalController implements Initializable {
         Arreglo<Integer> valores = new Arreglo<>(lista.getLongitud());
         Nodo<Integer> actual = lista.getCabeza();
         while (actual != null) {
-            try {
-                valores.insertar(actual.getDato());
-            } catch (IndicieFueraExeption e) {
-                throw new RuntimeException(e);
-            }
+            insertarEn(valores, actual.getDato());
             actual = actual.getSiguiente();
         }
         return valores;
@@ -338,16 +353,16 @@ public class PrincipalController implements Initializable {
         int n1 = medio - inicio + 1;
         int n2 = fin - medio;
 
-        int[] izq = new int[n1];
-        int[] der = new int[n2];
+        Arreglo<Integer> izq = new Arreglo<>(n1);
+        Arreglo<Integer> der = new Arreglo<>(n2);
 
         Nodo<Integer> actual = obtenerNodoEn(lista, inicio);
         for (int i = 0; i < n1; i++) {
-            izq[i] = actual.getDato();
+            insertarEn(izq, actual.getDato());
             actual = actual.getSiguiente();
         }
         for (int j = 0; j < n2; j++) {
-            der[j] = actual.getDato();
+            insertarEn(der, actual.getDato());
             actual = actual.getSiguiente();
         }
 
@@ -356,11 +371,13 @@ public class PrincipalController implements Initializable {
         actual = obtenerNodoEn(lista, inicio);
 
         while (i < n1 && j < n2) {
-            if (izq[i] <= der[j]) {
-                actual.setDato(izq[i]);
+            int valorIzq = valorEn(izq, i);
+            int valorDer = valorEn(der, j);
+            if (valorIzq <= valorDer) {
+                actual.setDato(valorIzq);
                 i++;
             } else {
-                actual.setDato(der[j]);
+                actual.setDato(valorDer);
                 j++;
             }
             if (alModificar != null) {
@@ -370,7 +387,7 @@ public class PrincipalController implements Initializable {
         }
 
         while (i < n1) {
-            actual.setDato(izq[i]);
+            actual.setDato(valorEn(izq, i));
             i++;
             if (alModificar != null) {
                 alModificar.accept(lista);
@@ -379,7 +396,7 @@ public class PrincipalController implements Initializable {
         }
 
         while (j < n2) {
-            actual.setDato(der[j]);
+            actual.setDato(valorEn(der, j));
             j++;
             if (alModificar != null) {
                 alModificar.accept(lista);
