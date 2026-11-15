@@ -162,7 +162,7 @@ public class PrincipalController implements Initializable {
         }
         valoresObjetivo = copiaOrdenada(lista);
         bacGrafica.getData().add(serie);
-        Platform.runLater(this::aplicarColores);
+
     }
 
     private void actualizarGrafica() {
