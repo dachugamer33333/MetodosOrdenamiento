@@ -10,7 +10,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="780.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fes.aragon.unam.metodosordenamiento.PrincipalController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="780.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fes.aragon.unam.metodosordenamiento.PrincipalController">
     <children>
         <Label layoutX="235.0" layoutY="16.0" text="Métodos de Ordenamiento">
             <font>
@@ -36,9 +36,9 @@
         <HBox alignment="CENTER" layoutX="15.0" layoutY="60.0" prefHeight="40.0" prefWidth="750.0" spacing="10.0">
             <children>
                 <Button fx:id="btnBurbuja" mnemonicParsing="false" onAction="#metodoBurbuja" text="Burbuja" />
+                <Button fx:id="btnShaker" mnemonicParsing="false" onAction="#metodoShaker" text="Sacudida (Shaker)" />
                 <Button fx:id="btnInsercion" mnemonicParsing="false" onAction="#metodoInsercion" text="Inserción" />
                 <Button fx:id="btnMezcla" mnemonicParsing="false" onAction="#metodoMezcla" text="Mezcla (Merge Sort)" />
-                <Button fx:id="btnShaker" mnemonicParsing="false" onAction="#metodoShaker" text="Sacudida (Shaker)" />
                 <Button fx:id="btnQuickSort" mnemonicParsing="false" onAction="#metodoQuickSort" text="QuickSort" />
                 <Button fx:id="btnNuevaLista" mnemonicParsing="false" onAction="#MetodoNuevaLista" text="Lista Nueva" />
             </children>
