@@ -56,6 +56,7 @@ public class PrincipalController implements Initializable {
         if (!ordenando) {
             nuevaLista(numeroDatos);
         }
+        setBotonesDeshabilitados(false);
     }
 
     @FXML
@@ -139,7 +140,8 @@ public class PrincipalController implements Initializable {
 
     private void finalizarOrdenamiento() {
         ordenando = false;
-        setBotonesDeshabilitados(false);
+        setBotonesDeshabilitados(true);
+        btnNuevaLista.setDisable(false);
     }
 
     @Override
