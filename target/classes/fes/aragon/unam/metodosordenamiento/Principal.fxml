@@ -7,6 +7,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="780.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fes.aragon.unam.metodosordenamiento.PrincipalController">
@@ -16,6 +17,22 @@
                 <Font name="System Bold" size="24.0" />
             </font>
         </Label>
+        <HBox alignment="CENTER_LEFT" layoutX="560.0" layoutY="24.0" spacing="6.0">
+            <children>
+                <Rectangle arcHeight="3.0" arcWidth="3.0" fill="#e53935" height="11.0" width="11.0" />
+                <Label text="Pendiente">
+                    <font>
+                        <Font size="11.0" />
+                    </font>
+                </Label>
+                <Rectangle arcHeight="3.0" arcWidth="3.0" fill="#1e88e5" height="11.0" width="11.0" />
+                <Label text="En su lugar">
+                    <font>
+                        <Font size="11.0" />
+                    </font>
+                </Label>
+            </children>
+        </HBox>
         <HBox alignment="CENTER" layoutX="15.0" layoutY="60.0" prefHeight="40.0" prefWidth="750.0" spacing="10.0">
             <children>
                 <Button fx:id="btnBurbuja" mnemonicParsing="false" onAction="#metodoBurbuja" text="Burbuja" />

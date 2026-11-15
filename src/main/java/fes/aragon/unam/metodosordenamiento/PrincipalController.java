@@ -20,6 +20,7 @@ import java.util.function.Consumer;
 
 public class PrincipalController implements Initializable {
     private static final String COLOR_ORDENADO = "-fx-bar-fill: #1e88e5;";
+    private static final String COLOR_PENDIENTE = "-fx-bar-fill: #e53935;";
 
     private int tiempoRetardo = 40;
     private int numeroDatos = 40;
@@ -186,7 +187,7 @@ public class PrincipalController implements Initializable {
                 continue;
             }
             boolean enSuLugar = dato.getYValue().intValue() == valorEn(valoresObjetivo, i);
-            dato.getNode().setStyle(enSuLugar ? COLOR_ORDENADO : null);
+            dato.getNode().setStyle(enSuLugar ? COLOR_ORDENADO : COLOR_PENDIENTE);
         }
     }
 
